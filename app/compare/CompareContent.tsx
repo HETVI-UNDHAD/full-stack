@@ -5,8 +5,10 @@ import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import type { College } from '@/lib/types'
 import CompareTable from '@/components/CompareTable'
-import { GitCompare, X, Plus } from 'lucide-react'
+import { GitCompare, X, Plus, Bookmark } from 'lucide-react'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
+import type { User } from '@supabase/supabase-js'
 
 export default function CompareContent() {
   const searchParams = useSearchParams()
@@ -14,8 +16,11 @@ export default function CompareContent() {
   const [allColleges, setAllColleges] = useState<College[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [user, setUser] = useState<User | null>(null)
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user))
     const ids = searchParams.get('ids')?.split(',').filter(Boolean) ?? []
     setSelectedIds(ids)
   }, [searchParams])
@@ -41,6 +46,21 @@ export default function CompareContent() {
   }
 
   const removeCollege = (id: string) => setSelectedIds(prev => prev.filter(x => x !== id))
+
+  const saveComparison = async () => {
+    if (!user) { toast.error('Please login to save comparison'); return }
+    if (selectedIds.length < 2) { toast.error('Select at least 2 colleges'); return }
+    setSaving(true)
+    const { error } = await supabase
+      .from('saved_comparisons')
+      .insert({ user_id: user.id, college_ids: selectedIds })
+    if (error) {
+      toast.error('Failed to save comparison')
+    } else {
+      toast.success('Comparison saved!')
+    }
+    setSaving(false)
+  }
 
   const available = allColleges.filter(c => !selectedIds.includes(c.id))
 
@@ -87,6 +107,17 @@ export default function CompareContent() {
 
           {selectedIds.length === 0 && (
             <p className="text-slate-400 text-sm">No colleges selected. Add colleges above to compare.</p>
+          )}
+
+          {selectedIds.length >= 2 && (
+            <button
+              onClick={saveComparison}
+              disabled={saving}
+              className="flex items-center gap-1.5 bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-green-700 transition disabled:opacity-60 ml-auto"
+            >
+              <Bookmark className="w-4 h-4" />
+              {saving ? 'Saving...' : 'Save Comparison'}
+            </button>
           )}
         </div>
       </div>
