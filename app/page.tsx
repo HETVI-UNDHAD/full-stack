@@ -1,65 +1,59 @@
-import Image from "next/image";
+import Link from 'next/link'
+import { GraduationCap, Search, BookOpen, Star } from 'lucide-react'
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen">
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 text-white py-24 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="flex justify-center mb-6">
+            <GraduationCap className="w-16 h-16 text-blue-200" />
+          </div>
+          <h1 className="text-5xl font-bold mb-4 leading-tight">
+            Find Your Dream College
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
+            Explore thousands of colleges, compare programs, and make the right choice for your future.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/colleges"
+              className="bg-white text-blue-700 font-semibold px-8 py-3 rounded-xl hover:bg-blue-50 transition"
+            >
+              Browse Colleges
+            </Link>
+            <Link
+              href="/compare"
+              className="border-2 border-white text-white font-semibold px-8 py-3 rounded-xl hover:bg-white/10 transition"
+            >
+              Compare Colleges
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Features */}
+      <section className="max-w-6xl mx-auto px-4 py-20">
+        <h2 className="text-3xl font-bold text-center text-slate-800 mb-12">
+          Everything You Need to Decide
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { icon: Search, title: 'Smart Search', desc: 'Search colleges by name, location, fees and more with instant results.' },
+            { icon: BookOpen, title: 'Course Details', desc: 'Explore all courses offered by each college with duration and eligibility.' },
+            { icon: Star, title: 'Compare & Save', desc: 'Compare up to 3 colleges side-by-side and save your favourites.' },
+          ].map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-md transition">
+              <div className="bg-blue-50 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                <Icon className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-800 mb-2">{title}</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">{desc}</p>
+            </div>
+          ))}
         </div>
-      </main>
+      </section>
     </div>
-  );
+  )
 }
